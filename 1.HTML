@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ai</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 现代化主色系 */
+        :root {
+            --primary: #4f46e5;
+            --secondary: #10b981;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+        }
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            font-family: 'Inter', system-ui;
+            margin: 0;
+            min-height: 100vh;
+        }
+        /* 自适应布局 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: minmax(300px, 1fr) 2fr;
+            gap: 32px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 16px;
+            }
+        }
+        /* 任务卡片交互优化 */
+               /* 
+         * .task-card 类用于定义任务卡片的样式。
+         * 该样式包括背景颜色、圆角、内边距、外边距、阴影、过渡效果、鼠标指针样式、以及布局方式。
+         * 当鼠标悬停在卡片上时，卡片会轻微上移并改变阴影效果。
+         * 当卡片被标记为完成时，背景颜色会改变，并在左侧添加一个边框。
+         */
+        .task-card {
+            background: var(--surface); /* 使用自定义变量设置背景颜色 */
+            border-radius: 12px; /* 设置圆角半径为12px */
+            padding: 16px; /* 设置内边距为16px */
+            margin: 8px 0; /* 设置上下外边距为8px，左右外边距为0 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 添加轻微的阴影效果 */
+            transition: all 0.2s; /* 设置所有属性的过渡时间为0.2秒 */
+            cursor: pointer; /* 设置鼠标指针为手型 */
+            display: flex; /* 使用弹性盒子布局 */
+            align-items: center; /* 垂直居中对齐内容 */
+        }
+        
+        /* 
+         * 当鼠标悬停在.task-card元素上时，应用以下样式。
+         * 卡片会向上移动2px，并改变阴影效果。
+         */
+        .task-card:hover {
+            transform: translateY(-2px); /* 向上移动2px */
+            box-shadow: 0 4px 8px rgba(79,70,229,0.1); /* 改变阴影效果 */
+        }
+        
+        /* 
+         * 当.task-card元素被标记为完成时，应用以下样式。
+         * 背景颜色变为浅绿色，并在左侧添加一个边框。
+         */
+        .task-card.completed {
+            background: #f0fdf4; /* 设置背景颜色为浅绿色 */
+            border-left: 4px solid var(--secondary); /* 在左侧添加一个4px的边框，颜色使用自定义变量 */
+        }
+        /* 对话系统增强 */
+        .chat-container {
+            height: calc(100vh - 160px);
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .message-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 16px;
+            scroll-behavior: smooth;
+        }
+        .message-bubble {
+            max-width: 80%;
+            margin: 8px 0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            animation: messageIn 0.3s ease;
+        }
+        .message-bubble.user {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+        }
+        .message-bubble.ai {
+            background: #f1f5f9;
+            margin-right: auto;
+        }
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <!-- 左栏：任务系统 -->
+            <div class="task-panel">
+                <div class="header">
+                    <h2> 今日计表</h2>
+                    <div class="point-display">成就点：{{ points }}P</div>
+                </div>
+                
+                <div v-for="(task, index) in tasks" 
+                     :key="index" 
+                     class="task-card"
+                     :class="{completed: task.completed}"
+                     @dblclick="toggleTask(index)">
+                    <div class="task-info">
+                        <div class="task-name">{{ task.name }}</div>
+                        <div class="task-time">{{ task.start }} - {{ task.end }}</div>
+                    </div>
+                    <div class="task-actions">
+                        <button @click.stop="editTask(index)" class="icon-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button @click.stop="deleteTask(index)" class="icon-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="primary-btn" @click="showEditor = true">
+                    <i class="fas fa-plus"></i> 新建任务
+                </button>
+            </div>
+
+            <!-- 右栏：对话系统 -->
+            <div class="chat-container">
+                <div class="message-area" ref="messageArea">
+                    <div v-for="(msg, index) in messages" 
+                         :key="index"
+                         class="message-bubble"
+                         :class="msg.role">
+                        <div class="message-meta">
+                            <span class="sender">{{ msg.role === 'user' ? '你' : '导师' }}</span>
+                            <span class="time">{{ msg.time }}</span>
+                        </div>
+                        <div class="message-content">{{ msg.content }}</div>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input v-model="inputMsg" 
+                           @keyup.enter="sendMessage"
+                           placeholder="输入消息...">
+                    <button class="primary-btn" @click="sendMessage">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务编辑器 -->
+        <div v-if="showEditor" class="modal-overlay">
+            <div class="modal-card">
+                <h3>🛠️ 任务配置</h3>
+                <input v-model="editingTask.name" 
+                       placeholder="任务名称"
+                       class="modern-input">
+                <div class="time-grid">
+                    <div class="time-picker">
+                        <label>开始时间</label>
+                        <input type="time" v-model="editingTask.start">
+                    </div>
+                    <div class="time-picker">
+                        <label>结束时间</label>
+                        <input type="time" v-model="editingTask.end">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="primary-btn" @click="saveTask">保存</button>
+                    <button class="secondary-btn" @click="showEditor = false">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    points: 150,
+                    tasks: [
+                        { name: '晨间写作', start: '08:00', end: '10:00', completed: false },
+                        { name: '项目开发', start: '10:30', end: '12:30', completed: true }
+                    ],
+                    messages: [
+                        { 
+                            role: 'ai', 
+                            content: '今日计划已同步，当前完成度45%', 
+                            time: new Date().toLocaleTimeString() 
+                        }
+                    ],
+                    inputMsg: '',
+                    showEditor: false,
+                    editingTask: { name: '', start: '09:00', end: '10:00' }
+                }
+            },
+            methods: {
+                toggleTask(index) {
+                    const task = this.tasks[index]
+                    task.completed = !task.completed
+                    this.points += task.completed ? 20 : -20
+                    this.$nextTick(() => {
+                        this.scrollToBottom()
+                    })
+                },
+                sendMessage() {
+                    if (!this.inputMsg.trim()) return
+                    
+                    // 用户消息
+                    this.messages.push({
+                        role: 'user',
+                        content: this.inputMsg,
+                        time: new Date().toLocaleTimeString()
+                    })
+                    
+                    // 模拟AI回复
+                    setTimeout(() => {
+                        this.messages.push({
+                            role: 'ai',
+                            content: this.generateResponse(),
+                            time: new Date().toLocaleTimeString()
+                        })
+                        this.scrollToBottom()
+                    }, 300)
+                    
+                    this.inputMsg = ''
+                },
+                scrollToBottom() {
+                    const container = this.$refs.messageArea
+                    container.scrollTo({
+                        top: container.scrollHeight,
+                        behavior: 'smooth'
+                    })
+                },
+                generateResponse() {
+                    const completedTasks = this.tasks.filter(t => t.completed).length
+                    return `当前完成 ${completedTasks}/${this.tasks.length} 项任务，继续加油！`
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<template>
+  <div class="welcome-view">
+    <div class="hero-section">
+      <h1 class="welcome-title">欢迎来到智能训练小屋</h1>
+      <p class="welcome-subtitle">您的个人效率管理中心</p>
+      
+      <div class="action-card">
+        <el-input 
+        
+          placeholder="输入昵称快速开始"
+          size="large"
+          class="nickname-input"
+        >
+          <template #append>
+            <el-button 
+              type="primary" 
+              
+            >
+              立即体验
+            </el-button>
+          </template>
+        </el-input>
+
+        <div class="divider">
+          <span class="divider-text">或</span>
+        </div>
+
+        <div class="auth-options">
+          <el-button 
+            type="primary" 
+            plain
+           
+            class="auth-button"
+          >
+            登录已有账号
+          </el-button>
+          <el-button 
+            type="success" 
+            plain
+        
+            class="auth-button"
+          >
+            注册新账号
+          </el-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-showcase">
+      <el-row :gutter="20">
+        <el-col :md="8" :sm="24">
+          <div class="feature-card">
+            <el-icon :size="60"><AlarmClock /></el-icon>
+            <h3>智能任务管理</h3>
+            <p>AI驱动的任务规划与时间分配</p>
+          </div>
+        </el-col>
+        <el-col :md="8" :sm="24">
+          <div class="feature-card">
+            <el-icon :size="60"><TrendCharts /></el-icon>
+            <h3>成长可视化</h3>
+            <p>多维度的数据统计与分析</p>
+          </div>
+        </el-col>
+        <el-col :md="8" :sm="24">
+          <div class="feature-card">
+            <el-icon :size="60"><MagicStick /></el-icon>
+            <h3>AI训练助手</h3>
+            <p>24小时在线的智能导师</p>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.welcome-view {
+  min-height: 100vh;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+
+  .hero-section {
+    text-align: center;
+    margin-bottom: 80px;
+
+    .welcome-title {
+      font-size: 2.8rem;
+      color: #2c3e50;
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.5px;
+    }
+
+    .welcome-subtitle {
+      font-size: 1.4rem;
+      color: #7f8c8d;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .action-card {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(10px);
+
+    .nickname-input {
+      :deep(.el-input-group__append) {
+        background-color: var(--el-color-primary);
+        border: none;
+        
+        .el-button {
+          color: white;
+          padding: 0 28px;
+        }
+      }
+    }
+  }
+
+  .divider {
+    position: relative;
+    margin: 2.5rem 0;
+    height: 1px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #dcdfe6, transparent);
+    }
+
+    .divider-text {
+      position: relative;
+      display: inline-block;
+      padding: 0 1.2rem;
+      background: white;
+      color: #909399;
+      font-size: 0.9rem;
+      transform: translateY(-50%);
+    }
+  }
+
+  .auth-options {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+
+    .auth-button {
+      flex: 1;
+      max-width: 200px;
+      padding: 12px 0;
+      font-size: 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  .feature-showcase {
+    margin-top: 80px;
+    padding: 0 20px;
+
+    .feature-card {
+      padding: 2.5rem 2rem;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      }
+
+      .el-icon {
+        color: var(--el-color-primary);
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        color: #7f8c8d;
+        line-height: 1.6;
+        text-align: center;
+        max-width: 240px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-view {
+    padding: 40px 15px;
+
+    .welcome-title {
+      font-size: 2rem;
+    }
+
+    .welcome-subtitle {
+      font-size: 1.1rem;
+    }
+
+    .action-card {
+      padding: 1.5rem;
+    }
+
+    .feature-card {
+      min-height: 220px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+
+      h3 {
+        font-size: 1.3rem;
+      }
+    }
+
+    .auth-options {
+      flex-direction: column;
+      gap: 1rem;
+
+      .auth-button {
+        max-width: none;
+      }
+    }
+  }
+}
+</style>
+
+
+
+欢迎页
+
+
+ 修改登录逻辑，检查用户名是否存在，并存储用户信息到localStorage
+const handleLogin = async (form: { nickname: any; }) => {
+  const savedUser = localStorage.getItem('user');
+  if (!savedUser) {
+    ElMessage.error('该用户名未注册');
+    return;
+  }
+
+  const existingUser = JSON.parse(savedUser);
+  if (existingUser.tempUser) {
+    const confirm = await ElMessageBox.confirm(
+      '您之前是临时用户，登录后之前的任务将会与您的账户关联，是否继续？',
+      '提示',
+      {
+        confirmButtonText: '继续',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    );
+
+    if (confirm !== 'confirm') return;
+  }
+
+  userStore.login({
+    ...existingUser,
+    nickname: form.nickname,
+    isTemporary: false
+  });
+  ElMessage.success(`欢迎回来，${form.nickname}`);
+
+  // 将之前的任务与新用户ID关联
+  try {
+    const db = await openDB();
+    const tx = db.transaction(['shortTasks', 'longTasks', 'points'], 'readwrite');
+
+    // 更新短期任务
+    const shortTasksStore = tx.objectStore('shortTasks');
+    const shortTasksRequest = shortTasksStore.getAll();
+    shortTasksRequest.onsuccess = () => {
+      shortTasksRequest.result.forEach(task => {
+        if (task.userId === 'temp_user') { // 检查并更新旧的临时用户ID
+          task.userId = userStore.value.userId;
+          shortTasksStore.put(task);
+        }
+      });
+    };
+
+    // 更新长期任务
+    const longTasksStore = tx.objectStore('longTasks');
+    const longTasksRequest = longTasksStore.getAll();
+    longTasksRequest.onsuccess = () => {
+      longTasksRequest.result.forEach(task => {
+        if (task.userId === 'temp_User') { // 检查并更新旧的临时用户ID
+          task.userId = userStore.value.userId;
+          longTasksStore.put(task);
+        }
+      });
+    };
+
+    // 更新积分
+    const pointsStore = tx.objectStore('points');
+    const pointsRequest = pointsStore.getAll();
+    pointsRequest.onsuccess = () => {
+      pointsRequest.result.forEach(point => {
+        if (point.userId === 'temp_user') { // 检查并更新旧的临时用户ID
+          point.userId = userStore.value.userId;
+          pointsStore.put(point);
+        }
+      });
+    };
+  } catch (error) {
+    console.error('任务关联失败:', error);
+  }
+};
+

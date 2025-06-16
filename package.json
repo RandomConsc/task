@@ -1,0 +1,35 @@
+{
+  "name": "aitask",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3000",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@fortawesome/fontawesome-free": "^6.4.2",
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "echarts": "^5.6.0",
+    "element-plus": "^2.9.10",
+    "marked": "^15.0.12",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.103.0",
+    "pinia": "^3.0.2",
+    "vue": "^3.5.13",
+    "vue-router": "^4.0.13",
+    "vuedraggable": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue-jsx": "^4.2.0",
+    "sass-embedded": "^1.89.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.2.4",
+    "vite-plugin-vue-devtools": "^7.7.2",
+    "vue-tsc": "^2.2.10"
+  }
+}

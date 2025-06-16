@@ -1,0 +1,7 @@
+<script setup>
+</script>
+
+<template>
+    <h1>测试eeeeeeeeeeeeeeeeeeeee</h1>
+    <router-link to="/"><i class="fas fa-home"></i> 首页</router-link>
+</template>

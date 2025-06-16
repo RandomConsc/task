@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务卡片 - 状态切换风格</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .task-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        /* 状态指示条 */
+        .status-indicator {
+            height: 8px;
+            transition: all 0.4s ease;
+        }
+        
+        /* 不同状态下的样式 */
+        .todo .status-indicator {
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+        
+        .in-progress .status-indicator {
+            background: linear-gradient(90deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+        
+        .completed .status-indicator {
+            background: linear-gradient(90deg, #a8ff78 0%, #78ffd6 100%);
+        }
+        
+        .card-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .priority {
+            display: flex;
+            align-items: center;
+        }
+        
+        .priority-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-right: 8px;
+            font-weight: 500;
+        }
+        
+        .priority-level {
+            display: flex;
+        }
+        
+        .priority-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            margin-right: 4px;
+        }
+        
+        .priority-dot.active {
+            background-color: #e74c3c;
+        }
+        
+        .date {
+            background: #f8f9fa;
+            color: #7f8c8d;
+            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .task-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .task-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+        
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .status-display {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .todo .status-display {
+            background: rgba(255, 154, 158, 0.15);
+            color: #ff6b6b;
+        }
+        
+        .in-progress .status-display {
+            background: rgba(161, 196, 253, 0.15);
+            color: #4d8af0;
+        }
+        
+        .completed .status-display {
+            background: rgba(168, 255, 120, 0.15);
+            color: #2ecc71;
+        }
+        
+        .status-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .status-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-todo {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: white;
+        }
+        
+        .btn-progress {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: white;
+        }
+        
+        .btn-completed {
+            background: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);
+            color: white;
+        }
+        
+        .card-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            opacity: 0.1;
+            transition: all 0.3s ease;
+        }
+        
+        .todo .card-icon {
+            color: #ff6b6b;
+        }
+        
+        .in-progress .card-icon {
+            color: #4d8af0;
+        }
+        
+        .completed .card-icon {
+            color: #2ecc71;
+        }
+        
+        .task-card:hover .card-icon {
+            opacity: 0.3;
+            transform: scale(1.2);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .task-card {
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .task-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .task-card:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>任务状态卡片</h1>
+            <p class="subtitle">点击状态按钮切换任务状态，卡片风格会随之变化。每个卡片展示不同的优先级和任务信息。</p>
+        </header>
+        
+        <div class="cards-container">
+            <!-- 卡片 1 - 待处理 -->
+            <div class="task-card todo">
+                <div class="status-indicator"></div>
+                <div class="card-content">
+                    <i class="fas fa-clipboard-list card-icon"></i>
+                    <div class="card-header">
+                        <div class="priority">
+                            <span class="priority-label">优先级:</span>
+                            <div class="priority-level">
+                                <div class="priority-dot active"></div>
+                                <div class="priority-dot active"></div>
+                                <div class="priority-dot"></div>
+                                <div class="priority-dot"></div>
+                                <div class="priority-dot"></div>
+                            </div>
+                        </div>
+                        <div class="date">2023-06-15</div>
+                    </div>
+                    
+                    <h3 class="task-title">网站首页重新设计</h3>
+                    <p class="task-description">创建新的首页布局，优化用户体验和视觉设计。确保响应式设计在所有设备上完美呈现。</p>
+                    
+                    <div class="task-footer">
+                        <div class="status-display">
+                            <i class="fas fa-clock"></i> &nbsp;待处理
+                        </div>
+                        <div class="status-actions">
+                            <button class="status-btn btn-todo" onclick="changeStatus(this, 'todo')">
+                                <i class="fas fa-clock"></i>
+                            </button>
+                            <button class="status-btn btn-progress" onclick="changeStatus(this, 'in-progress')">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button class="status-btn btn-completed" onclick="changeStatus(this, 'completed')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 卡片 2 - 进行中 -->
+            <div class="task-card in-progress">
+                <div class="status-indicator"></div>
+                <div class="card-content">
+                    <i class="fas fa-tasks card-icon"></i>
+                    <div class="card-header">
+                        <div class="priority">
+                            <span class="priority-label">优先级:</span>
+                            <div class="priority-level">
+                                <div class="priority-dot active"></div>
+                                <div class="priority-dot active"></div>
+                                <div class="priority-dot active"></div>
+                                <div class="priority-dot active"></div>
+                                <div class="priority-dot"></div>
+                            </div>
+                        </div>
+                        <div class="date">2023-06-10</div>
+                    </div>
+                    
+                    <h3 class="task-title">用户认证系统开发</h3>
+                    <p class="task-description">实现完整的用户注册、登录和密码重置流程。集成第三方登录（Google、Facebook）功能。</p>
+                    
+                    <div class="task-footer">
+                        <div class="status-display">
+                            <i class="fas fa-sync-alt"></i> &nbsp;进行中
+                        </div>
+                        <div class="status-actions">
+                            <button class="status-btn btn-todo" onclick="changeStatus(this, 'todo')">
+                                <i class="fas fa-clock"></i>
+                            </button>
+                            <button class="status-btn btn-progress" onclick="changeStatus(this, 'in-progress')">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button class="status-btn btn-completed" onclick="changeStatus(this, 'completed')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 卡片 3 - 已完成 -->
+            <div class="task-card completed">
+                <div class="status-indicator"></div>
+                <div class="card-content">
+                    <i class="fas fa-check-circle card-icon"></i>
+                    <div class="card-header">
+                        <div class="priority">
+                            <span class="priority-label">优先级:</span>
+                            <div class="priority-level">
+                                <div class="priority-dot active"></div>
+                                <div class="priority-dot active"></div>
+                                <div class="priority-dot"></div>
+                                <div class="priority-dot"></div>
+                                <div class="priority-dot"></div>
+                            </div>
+                        </div>
+                        <div class="date">2023-06-05</div>
+                    </div>
+                    
+                    <h3 class="task-title">性能优化方案</h3>
+                    <p class="task-description">分析当前网站性能瓶颈，实施优化策略，减少加载时间，提升用户体验。</p>
+                    
+                    <div class="task-footer">
+                        <div class="status-display">
+                            <i class="fas fa-check"></i> &nbsp;已完成
+                        </div>
+                        <div class="status-actions">
+                            <button class="status-btn btn-todo" onclick="changeStatus(this, 'todo')">
+                                <i class="fas fa-clock"></i>
+                            </button>
+                            <button class="status-btn btn-progress" onclick="changeStatus(this, 'in-progress')">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button class="status-btn btn-completed" onclick="changeStatus(this, 'completed')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeStatus(button, newStatus) {
+            const card = button.closest('.task-card');
+            
+            // 移除所有状态类
+            card.classList.remove('todo', 'in-progress', 'completed');
+            
+            // 添加新状态类
+            card.classList.add(newStatus);
+            
+            // 更新状态显示文本
+            const statusDisplay = card.querySelector('.status-display');
+            const icon = statusDisplay.querySelector('i');
+            
+            switch(newStatus) {
+                case 'todo':
+                    statusDisplay.innerHTML = '<i class="fas fa-clock"></i> &nbsp;待处理';
+                    break;
+                case 'in-progress':
+                    statusDisplay.innerHTML = '<i class="fas fa-sync-alt"></i> &nbsp;进行中';
+                    break;
+                case 'completed':
+                    statusDisplay.innerHTML = '<i class="fas fa-check"></i> &nbsp;已完成';
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
